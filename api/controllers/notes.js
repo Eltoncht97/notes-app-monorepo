@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken')
 const userExtractor = require('../middlewares/userExtractor')
 const notesRouter = require('express').Router()
 const Note = require('../models/Note')
 const User = require('../models/User')
 
 notesRouter.get('/', async (request, response) => {
-  const notes = await Note.find({}).populate('user', {username:1, name:1})
+  const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
   response.json(notes)
 })
 
@@ -13,7 +12,7 @@ notesRouter.get('/:id', (request, response, next) => {
   const id = request.params.id
   Note.findById(id)
     .then(note => {
-      if(note) return response.json(note)
+      if (note) return response.json(note)
       response.status(404).end()
     })
     .catch(error => {
@@ -21,14 +20,14 @@ notesRouter.get('/:id', (request, response, next) => {
     })
 })
 
-notesRouter.post('/' ,userExtractor , async (request, response, next) => {
-  const {content, important = false} = request.body
-  
+notesRouter.post('/', userExtractor, async (request, response, next) => {
+  const { content, important = false } = request.body
+
   const { userId } = request
 
   const user = await User.findById(userId)
 
-  if(!content){
+  if (!content) {
     return response.status(400).json({
       error: 'required "content" field is missing'
     })
@@ -65,7 +64,7 @@ notesRouter.put('/:id', (request, response) => {
     })
 })
 
-notesRouter.delete('/:id' ,userExtractor , async (request, response, next) => {
+notesRouter.delete('/:id', userExtractor, async (request, response, next) => {
   const id = request.params.id
   try {
     await Note.findByIdAndRemove(id)

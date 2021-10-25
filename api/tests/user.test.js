@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
-const {server} = require('../index')
+const { server } = require('../index')
 const User = require('../models/User')
 const { api, getUsers } = require('./helpers')
 
@@ -9,15 +9,15 @@ describe('creating a new user', () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('pswd', 10)
-    const user = new User({ username: 'echavez01', name: 'elton', passwordHash})
+    const user = new User({ username: 'echavez01', name: 'elton', passwordHash })
     await user.save()
   })
 
   test('works as expected creating a fresh username', async () => {
     const usersAtStart = await getUsers()
-    
-    const newUser = { username: 'echavez01', name: 'Miguel', password:'narut0'}
-    
+
+    const newUser = { username: 'echavez01', name: 'Miguel', password: 'narut0' }
+
     await api
       .post('/api/users')
       .send(newUser)
